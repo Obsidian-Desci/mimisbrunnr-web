@@ -16,9 +16,9 @@ import { publicProvider } from 'wagmi/providers/public'
 import { NavBar } from './components/NavBar'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import App from './App.tsx'
-import { Mimis } from './pages/Mimis/Mimis.tsx'
-import { MintMimis } from './pages/Mimis/MintMimis.tsx'
+import { App } from '@/App.tsx'
+import { Mimis } from '@/pages/Mimis/Mimis.tsx'
+import { MintMimis } from '@/pages/Mimis/MintMimis.tsx'
 import { UnwrapMimis } from "./pages/Mimis/UnwrapMimis.tsx"
 import { StakeMimis } from "./pages/Mimis/StakeMimis.tsx"
 const { chains, publicClient, webSocketPublicClient } = configureChains(
@@ -47,7 +47,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <WagmiConfig config={config}>
-        <RainbowKitProvider chains={chains}>
+        <RainbowKitProvider coolMode chains={chains}>
           <BrowserRouter>
           <NavBar/>
           <Routes>
