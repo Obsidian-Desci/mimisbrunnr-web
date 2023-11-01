@@ -1,68 +1,64 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import '@rainbow-me/rainbowkit/styles.css';
+import { ChakraProvider } from '@chakra-ui/react'
+import { extendTheme, withDefaultColorScheme } from '@chakra-ui/react'
 
+import '@rainbow-me/rainbowkit/styles.css';
 import {
   getDefaultWallets,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-
 import { WagmiConfig, createConfig, configureChains, mainnet } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
-import { InjectedConnector } from 'wagmi/connectors/injected'
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 
-import { ChakraProvider } from '@chakra-ui/react'
-import { extendTheme } from '@chakra-ui/react'
 
+import { NavBar } from './components/NavBar'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import App from './App.tsx'
+import { Mimis } from './pages/Mimis/Mimis.tsx'
+import { MintMimis } from './pages/Mimis/MintMimis.tsx'
+import { UnwrapMimis } from "./pages/Mimis/UnwrapMimis.tsx"
+import { StakeMimis } from "./pages/Mimis/StakeMimis.tsx"
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet],
   [publicProvider()]
 )
+
+const { connectors } = getDefaultWallets({
+  appName: 'Mimisbrunnr',
+  projectId: import.meta.env.VITE_WALLETCONNECT_CLOUD_API_KEY,
+  chains
+});
+
 const config = createConfig({
   autoConnect: true,
-  connectors: [
-    new MetaMaskConnector({ chains }),
-    new InjectedConnector({
-      chains,
-      options: {
-        name: 'Injected',
-        shimDisconnect: true,
-      },
-    }),
-  ],
+  connectors,
   publicClient,
   webSocketPublicClient,
 })
-const colors = {
-  brand: {
-    900: '#1a365d',
-    800: '#153e75',
-    700: '#2a69ac',
-  },
-}
 
-const theme = extendTheme({ colors })
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App/>,
-  },
-]);
+const theme = extendTheme(withDefaultColorScheme({
+  colorScheme: 'purple'
+}))
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <WagmiConfig config={config}>
-        <RouterProvider router={router} />
+        <RainbowKitProvider chains={chains}>
+          <BrowserRouter>
+          <NavBar/>
+          <Routes>
+            <Route path="/" element={<App/>} />
+            <Route path="/mimis" element={<Mimis/>} />
+            <Route path="/mimis/mint" element={<MintMimis/>} />
+            <Route path="/mimis/unwrap" element={<UnwrapMimis/>} />
+            <Route path="/mimis/stake" element={<StakeMimis/>} />
+          </Routes>
+          </BrowserRouter>
+        </RainbowKitProvider>
       </WagmiConfig>
     </ChakraProvider>
   </React.StrictMode>

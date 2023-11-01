@@ -2,7 +2,8 @@ import {useState,useEffect} from 'react'
 //import {useWeb3React} from '@web3-react/core'
 //import { useIpfs } from '@/hooks/useIpfs'
 import { SiIpfs } from 'react-icons/si'
-
+import Logo from '../assets/obsidian-desci-logo.png'
+import LogoCoin from '../assets/obsidian-desci-coin.png'
 import {
   Container,
   Box,
@@ -21,6 +22,7 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
+  Image
 } from '@chakra-ui/react';
 import {
   MoonIcon,
@@ -31,29 +33,10 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons';
 import { Link as RouterLink} from 'react-router-dom'
-//import { ConnectWallet } from './ConnectWallet'
-import { substringAddr } from './Utils'
-const chainIdToName = (id:number) => {
-  switch (id) {
-    case 1:
-      return 'mainnet'
-      break
-    case 1337:
-      return 'localhost'
-      break
-    default:
-      return 'Select Network'
-  }
-}
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 
 export const NavBar = () => {
-  //const {ipfs, error:ipfsError, starting:ipfsStarting} = useIpfs()
-  const {networkName, setNetworkName} = useState('')
-  //const { accounts, chainId } = useWeb3React()
-  const [showWalletModal, setShowWalletModal] = useState(false)
-  const handleClose = () => {
-    setShowWalletModal(false)
-  }
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode  } = useColorMode();
 
@@ -83,6 +66,7 @@ export const NavBar = () => {
               aria-label={'Toggle Navigation'}
             />
           </Flex>
+              <Image display={['none', 'none', 'flex', 'flex', 'flex']} src={LogoCoin} alt="ipfs logo" width={10} height={10} marginX={5} />
           <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
             <Text
               textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
@@ -110,14 +94,7 @@ export const NavBar = () => {
             >
               {/*chainIdToName(chainId) */}
             </Button>
-            <Button
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              onClick={() => { setShowWalletModal(!showWalletModal) }}
-            >
-                {/*accounts ? substringAddr(accounts[0]) : 'Connect Wallet' */}
-            </Button>
+            <ConnectButton />
             <Button onClick={toggleColorMode}>
               {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
             </Button>
@@ -128,7 +105,6 @@ export const NavBar = () => {
           <MobileNav />
         </Collapse>
       </Box>
-      {/*<ConnectWallet show={showWalletModal} handleClose={handleClose} />*/}
     </Container>
   );
 }
@@ -286,44 +262,25 @@ const NAV_ITEMS = [
    href: 'https://obsidian-desci.github.io/Docs/docs/category/mimisbrunnr' 
   },
   {
-    label: 'Buy MIMS',
-    href: '/mims/buy',
-    /*
+    label: 'Mimis',
+    href: '/mimis',
     children: [
       {
-        label: 'Active Auctions',
-        subLabel: 'Find Nfts currently being auctioned in open lobbies',
-        href: '/auctions/active',
+        label: 'Mint MIMS',
+        subLabel: 'Sell approved Uniswap v3 LP and receive MIMS',
+        href: '/mimis/mint',
       },
       {
-        label: 'Archived Auctions',
-        subLabel: 'Available historical records of past auctions youve engaged with',
-        href: '/auctions/archived',
+        label: 'Unwrap MIMS',
+        subLabel: 'Burn MIMS and receive a collection of desci tokens and WETH',
+        href: '/mimis/unwrap',
       },
       {
-        label: 'Create Auction',
-        subLabel: 'List your own NFT for auction',
-        href: '/auctions/create',
+        label: 'Stake MIMS/WETH',
+        subLabel: 'Stake in range MIMS/WETH LP and receive a portion of the LP rewards',
+        href: '/mimis/stake',
       },
+
     ],
-    */
-  },
-  {
-    label: 'Unwrap MIMS',
-    href: '/mims/unwrap',
-    /*
-    children: [
-      {
-        label: 'Guide',
-        subLabel: 'Learn how to use the auction house',
-        href: '/docs/guide',
-      },
-      {
-        label: 'How they work',
-        subLabel: 'Learn how the auction house works under the hood',
-        href: '/docs/work',
-      }
-    ],
-    */
   },
 ];
