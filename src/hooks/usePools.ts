@@ -192,12 +192,12 @@ export const useApprovePosition = () => {
             const hash = await nfpm.write.approve([MIMIS_ADDR, tokenId])
             const unwatch = await nfpm.watchEvent.Approval({
                 owner: address,
-                approved: nfpmAddress,
+                approved: MIMIS_ADDR,
                 tokenId: tokenId
             }, {
                 onLogs: (logs) => {
-                    console.log(logs)
-                    fetchApprovalsForNFT(MIMIS_ADDR)
+                    console.log('approvals logs', logs)
+                    setApproved(true)
                 }
             })
         }
@@ -214,7 +214,8 @@ export const useApprovePosition = () => {
             const approve = await nfpm.read.getApproved([tokenId])
             console.log('approved', approve)
 
-            if (approve === MIMIS_ADDR) {
+            if (approve == MIMIS_ADDR) {
+                console.log('approvals true')
                 setApproved(true)
             }
         }

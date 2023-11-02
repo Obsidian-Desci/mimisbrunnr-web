@@ -1,3 +1,3 @@
 export const StakeMimis = () => {
-    return (<>Stake Mimis</>)
+    return (<>Stake Mimis (Coming Soon)</>)
 }

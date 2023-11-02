@@ -1,9 +1,6 @@
-import { Token } from "@/hooks/constants"
-import { useToken } from "@/hooks/useTokens"
 import { UnwrapForm} from '@/components/UnwrapMimis/UnwrapForm'
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Container, Heading } from '@chakra-ui/react'
 export const UnwrapMimis = () => {
-    const { balance: mimisBalance } = useToken(Token.MIMIS)
     return (<>
     <Heading>Unwrap Mimis</Heading> 
         <Container>

@@ -1,5 +1,5 @@
 import {useState, useCallback, useEffect} from 'react'
-import { getContract, parseEther, formatEther } from 'viem'
+import { getContract, parseEther, formatEther, zeroAddress } from 'viem'
 
 import { 
     useAccount,
@@ -81,10 +81,10 @@ export const useUnwrapMimis = () => {
             const hash = await mimisbrunnr.write.unwrapMims([parseEther(amount)])
             setHash(hash)
             const unwatch = await mimisbrunnr.watchEvent.Transfer({
-                to: address
+                to: zeroAddress
             }, {
                 onLogs: (logs) => {
-                    console.log(logs)
+                    console.log('logs', logs)
                     setResult(logs)
                 }
             })

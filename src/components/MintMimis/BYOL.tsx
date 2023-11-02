@@ -1,14 +1,16 @@
+import { useEffect } from 'react'
 import { Token } from '@/hooks/useTokens'
 import { useSellLP } from '@/hooks/useMimisbrunnr'
 import { useForm, Resolver } from 'react-hook-form';
 import { useApprovePosition } from '@/hooks/usePools';
-
+import { SuccessModal } from '@/components/SuccessModal';
 import {
     FormErrorMessage,
     FormLabel,
     FormControl,
     Input,
     Button,
+    useDisclosure
 } from '@chakra-ui/react'
 
 
@@ -29,6 +31,7 @@ const resolver: Resolver<FormValues> = async (values) => {
     };
 };
 export const BYOL = () => {
+    const {isOpen, onOpen, onClose} = useDisclosure()
     const { approved, fetchApprovalsForNFT, fetchApproveNFT } = useApprovePosition()
     const {fetchSellLP, result, hash} = useSellLP()
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({ resolver });
@@ -41,7 +44,9 @@ export const BYOL = () => {
         console.log(data)
     });
 
-
+    useEffect(() => {
+        if (result) onOpen()
+    }, [result])
     return (<>
         <p>Sell your unconcentrated Desci/WETH LP for Mimis</p>
         <form onSubmit={onSubmit}>
@@ -51,7 +56,7 @@ export const BYOL = () => {
                 <Input
                     id="tokenId"
                     {...register("tokenId")}
-                    onBlur={(e) => {
+                    onChange={(e) => {
                         fetchApprovalsForNFT(e.target.value)
                     }}
                     placeholder="Uniswap V3 LP NFT Id"
@@ -70,5 +75,6 @@ export const BYOL = () => {
                 }
             </FormControl>
         </form>
+        <SuccessModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
     </>)
 }

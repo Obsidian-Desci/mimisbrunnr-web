@@ -45,6 +45,7 @@ export const useToken = (token:Token) => {
     }, [address])
 
     return {
+        fetchTokenBalance,
         balance
     }
 
