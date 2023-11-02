@@ -51,7 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ChakraProvider theme={theme}>
       <WagmiConfig config={config}>
         <RainbowKitProvider coolMode chains={chains}>
-          <HashRouter>
+          <HashRouter basename="/">
           <NavBar/>
           <Routes>
             <Route path="/" element={<App/>} />
