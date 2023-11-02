@@ -4,10 +4,7 @@ import {
     StatLabel,
     StatNumber,
     StatHelpText,
-    StatArrow,
     StatGroup,
-    Wrap,
-    WrapItem,
     Heading,
     Box
 } from '@chakra-ui/react'
@@ -15,7 +12,7 @@ import {
 import { formatEther } from "viem"
 import { useToken } from 'wagmi'
 
-import { MIMIS_ADDR, Pool, Token, PoolInfo, Position } from '@/hooks/constants'
+import { MIMIS_ADDR,  Token, PoolInfo } from '@/hooks/constants'
 import { useGetPoolInfo } from '@/hooks/usePools'
 
 const StatBox = (
@@ -56,7 +53,7 @@ const StatBox = (
     )
 }
 export const MimisbrunnrStats = () => {
-    const { data, isError, isLoading } = useToken({ address: MIMIS_ADDR as `0x${string}` })
+    const { data, isLoading } = useToken({ address: MIMIS_ADDR as `0x${string}` })
     const { poolInfo: rscPoolInfo } = useGetPoolInfo(Token.RSC)
     const { poolInfo: hairPoolInfo } = useGetPoolInfo(Token.HAIR)
     const { poolInfo: growPoolInfo } = useGetPoolInfo(Token.GROW)

@@ -1,8 +1,5 @@
-import {useState,useEffect} from 'react'
 //import {useWeb3React} from '@web3-react/core'
 //import { useIpfs } from '@/hooks/useIpfs'
-import { SiIpfs } from 'react-icons/si'
-import Logo from '../assets/obsidian-desci-logo.png'
 import LogoCoin from '../assets/obsidian-desci-coin.png'
 import {
   Container,

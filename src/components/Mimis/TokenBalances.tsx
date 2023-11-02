@@ -6,8 +6,6 @@ import {
     StatLabel,
     StatNumber,
     StatHelpText,
-    StatArrow,
-    StatGroup,
     Wrap,
     WrapItem,
     Heading

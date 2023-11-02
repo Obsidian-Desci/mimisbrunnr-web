@@ -1,26 +1,15 @@
-import {useState, useCallback, useEffect} from 'react'
-import { getContract, parseEther, formatEther, zeroAddress } from 'viem'
+import {useState, useCallback} from 'react'
+import { getContract, parseEther, zeroAddress } from 'viem'
 
 import { 
     useAccount,
-    usePrepareContractWrite,
-    useContractWrite,
-    useWaitForTransaction,
-    useContractRead,
     usePublicClient,
-    useContractEvent,
     useWalletClient
 } from 'wagmi'
 
 import {  abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
 import { 
-    Pool,
-    WETH_ADDR,
     MIMIS_ADDR,
-    PoolInfo,
-    Position,
-    structPoolInfo,
-    structPosition
 } from './constants'
 
 

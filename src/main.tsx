@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ChakraProvider } from '@chakra-ui/react'
 import { extendTheme, withDefaultColorScheme } from '@chakra-ui/react'
@@ -12,7 +11,6 @@ import {
 import { WagmiConfig, createConfig, configureChains  } from 'wagmi'
 import { mainnet, localhost} from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 
 
@@ -53,7 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ChakraProvider theme={theme}>
       <WagmiConfig config={config}>
         <RainbowKitProvider coolMode chains={chains}>
-          <HashRouter>
+          <HashRouter basename="/mimisbrunnr-web">
           <NavBar/>
           <Routes>
             <Route path="/" element={<App/>} />

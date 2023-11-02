@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { Token } from '@/hooks/useTokens'
 import { useSellLP } from '@/hooks/useMimisbrunnr'
 import { useForm, Resolver } from 'react-hook-form';
 import { useApprovePosition } from '@/hooks/usePools';

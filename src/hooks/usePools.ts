@@ -1,28 +1,15 @@
 
 import {useState, useCallback, useEffect} from 'react'
-import { getContract, parseEther, zeroAddress } from 'viem'
+import { getContract, parseEther } from 'viem'
 import { 
     useAccount,
-    usePrepareContractWrite,
-    useContractWrite,
-    useWaitForTransaction,
-    useContractRead,
     usePublicClient,
-    useContractEvent,
     useWalletClient
 } from 'wagmi'
 
-import { address as factoryAddress, abi as factoryAbi } from "@/assets/abi/UniswapV3Factory.json"
 import { address as nfpmAddress, abi as nfpmAbi } from "@/assets/abi/NonFungiblePositionManager.json"
 import { address as swapAddress, abi as swapAbi } from '@/assets/abi/SwapRouter.json'
 import {abi as poolAbi} from "@/assets/abi/UniswapV3Pool.json"
-
-import { abi as wethAbi } from "@/assets/abi/WETH.json"
-import { address as rscAddress, abi as rscAbi } from "@/assets/abi/RSC.json"
-import { address as growAddress, abi as growAbi } from "@/assets/abi/GROW.json"
-import { address as hairAddress, abi as hairAbi } from "@/assets/abi/HAIR.json"
-import { address as lakeAddress, abi as lakeAbi } from "@/assets/abi/LAKE.json"
-import { address as vitaAddress,  abi as vitaAbi } from "@/assets/abi/VITA.json"
 import {  abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
 import { 
     Pool,
