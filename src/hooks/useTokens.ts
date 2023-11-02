@@ -4,31 +4,21 @@ import {
     useAccount,
     usePrepareContractWrite,
     useContractWrite,
-    useWaitForTransaction,
     usePublicClient,
-    useBalance,
 } from 'wagmi'
 
 
 
-import { address as wethAddress, abi as wethAbi } from "@/assets/abi/WETH.json"
+import { abi as wethAbi } from "@/assets/abi/WETH.json"
 import { address as rscAddress, abi as rscAbi } from "@/assets/abi/RSC.json"
 import { address as growAddress, abi as growAbi } from "@/assets/abi/GROW.json"
 import { address as hairAddress, abi as hairAbi } from "@/assets/abi/HAIR.json"
 import { address as lakeAddress, abi as lakeAbi } from "@/assets/abi/LAKE.json"
 import { address as vitaAddress,  abi as vitaAbi } from "@/assets/abi/VITA.json"
-import { address as mimisAddress, abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
-import { getContract } from 'viem'
+import { abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
 
-export enum Token {
-    GROW="0x761A3557184cbC07b7493da0661c41177b2f97fA",
-    HAIR="0x9Ce115f0341ae5daBC8B477b74E83db2018A6f42",
-    LAKE="0xF9Ca9523E5b5A42C3018C62B084Db8543478C400",
-    VITA="0x81f8f0bb1cB2A06649E51913A151F0E7Ef6FA321",
-    RSC="0xD101dCC414F310268c37eEb4cD376CcFA507F571",
-    WETH="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-    MIMIS="0x8c117C89225baA3d2be118892aAfAe0f89fb9f6f"    
-}
+import { getContract } from 'viem'
+import {Token, MIMIS_ADDR, WETH_ADDR} from './constants'
 
 export const useToken = (token:Token) => {
     const publicClient = usePublicClient()
@@ -62,7 +52,7 @@ export const useToken = (token:Token) => {
 
 export const depositWeth = (amount:number) => {
     const { config, error } = usePrepareContractWrite({
-        address: wethAddress as `0x${string}`,
+        address: WETH_ADDR as `0x${string}`,
         abi: wethAbi,
         functionName: 'deposit',
         args: [amount]
@@ -81,8 +71,8 @@ export const depositWeth = (amount:number) => {
 
 export const useApprove = (token:Token) => {
     const { config, error } = usePrepareContractWrite({
-        address: mimisAddress as `0x${string}`,
-        abi: mimisAddress,
+        address: MIMIS_ADDR as `0x${string}`,
+        abi: mimisAbi,
         functionName: 'approve',
     })
 

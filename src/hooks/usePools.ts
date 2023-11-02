@@ -1,7 +1,6 @@
 
 import {useState, useCallback, useEffect} from 'react'
-import { getContract, parseEther } from 'viem'
-
+import { getContract, parseEther, zeroAddress } from 'viem'
 import { 
     useAccount,
     usePrepareContractWrite,
@@ -13,63 +12,64 @@ import {
     useWalletClient
 } from 'wagmi'
 
-const RSCWETH = "0xeC2061372a02D5e416F5D8905eea64Cab2c10970"
-const GROWWETH = "0x61847189477150832D658D8f34f84c603Ac269af"
-const HAIRWETH = "0x94DD312F6Cb52C870aACfEEb8bf5E4e28F6952ff"
-const LAKEWETH = "0xeFd69F1FF464Ed673dab856c5b9bCA4D2847a74f"
-const VITAWETH ="0xcBcC3cBaD991eC59204be2963b4a87951E4d292B"
-const MIMISWETH='0x0000000000000000000000000000000000000000'
-
 import { address as factoryAddress, abi as factoryAbi } from "@/assets/abi/UniswapV3Factory.json"
 import { address as nfpmAddress, abi as nfpmAbi } from "@/assets/abi/NonFungiblePositionManager.json"
 import { address as swapAddress, abi as swapAbi } from '@/assets/abi/SwapRouter.json'
 import {abi as poolAbi} from "@/assets/abi/UniswapV3Pool.json"
 
-import { address as wethAddress, abi as wethAbi } from "@/assets/abi/WETH.json"
+import { abi as wethAbi } from "@/assets/abi/WETH.json"
 import { address as rscAddress, abi as rscAbi } from "@/assets/abi/RSC.json"
 import { address as growAddress, abi as growAbi } from "@/assets/abi/GROW.json"
 import { address as hairAddress, abi as hairAbi } from "@/assets/abi/HAIR.json"
 import { address as lakeAddress, abi as lakeAbi } from "@/assets/abi/LAKE.json"
 import { address as vitaAddress,  abi as vitaAbi } from "@/assets/abi/VITA.json"
-import { address as mimisAddress, abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
+import {  abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
+import { 
+    Pool,
+    WETH_ADDR,
+    MIMIS_ADDR,
+    PoolInfo,
+    Position,
+    structPoolInfo,
+    structPosition
+} from './constants'
 
-enum Pool {
-    RSC=RSCWETH,
-    GROW=GROWWETH,
-    HAIR=HAIRWETH,
-    LAKE=LAKEWETH,
-    VITA=VITAWETH,
-    MIMIS=MIMISWETH,
-}
-
-export const useGetPoolInfo = async () => {
+export const useGetPoolInfo = (token:Token) => {
     const publicClient  = usePublicClient()
-    const [poolInfo, setPoolInfo] = useState<unknown|null>(null)
-    const [positionData, setPositionData] = useState<unknown|null>(null)
+    const [poolInfo, setPoolInfo] = useState<PoolInfo|null>(null)
+    const [positionData, setPositionData] = useState<Position|null>(null)
 
-    const fetchPoolInfo = useCallback(async (pool:Pool) => {
+    const fetchPoolInfo = useCallback(async () => {
         if (publicClient) {
             const mimisbrunnr = getContract({
-                address: mimisAddress,
+                address: MIMIS_ADDR,
                 abi: mimisAbi,
                 publicClient: publicClient
             })
-            const poolData = await mimisbrunnr.read.getPool([pool])
+            console.log('token', token)
+            const poolData = structPoolInfo(await mimisbrunnr.read.pools([token]))
             setPoolInfo(poolData)
             const nfpm = getContract({
                 address: nfpmAddress,
                 abi: nfpmAbi,
                 publicClient: publicClient
             })
-            const positionData = await nfpm.read.positions([poolData.mimisPosition])
+            console.log(poolData)
+            const positionData = structPosition(await nfpm.read.positions([poolData.mimisPosition]))
+            console.log(positionData)
             setPositionData(positionData)
 
         }
 
     }, [publicClient, poolInfo, positionData])
 
+    useEffect(() => {
+        if (poolInfo == null) {
+            fetchPoolInfo()
+        }
+    }, [publicClient])
+
     return {
-        fetchPoolInfo,
         poolInfo,
         positionData
     }
@@ -101,7 +101,7 @@ export const swapExactInputSingle = async () => {
             })
 
             const swapTx = await swapRouter.write.exactInputSingle([
-                wethAddress,
+                WETH_ADDR,
                 token,
                 fee,
                 address,
@@ -111,11 +111,13 @@ export const swapExactInputSingle = async () => {
                 0
             ])
 
-            const unwatch = await pool.events.Swap({
+            const unwatch = await pool.watchEvent.Swap({
                 sender: address,
                 recepient: address
             },
-            onLogs: logs => console.log(logs))
+            {
+                onLogs: logs => console.log(logs)
+            })
 
 
         }
@@ -140,7 +142,7 @@ export const mint = () => {
             const token0 = await poolInstance.read.token0()
             const token1 = await poolInstance.read.token1()
             const nfpm = getContract({
-                address: nfpmAddress,
+                address: nfpmAddress as `0x${string}`,
                 abi: nfpmAbi,
                 publicClient,
                 walletClient
@@ -149,8 +151,8 @@ export const mint = () => {
                 token0,
                 token1,
                 fee,
-                tickLower: Math.ceil(-887272 / tickSpacing) * tickSpacing,
-                tickUpper: Math.floor(887272 / tickSpacing) * tickSpacing,
+                Math.ceil(-887272 / tickSpacing) * tickSpacing,
+                Math.floor(887272 / tickSpacing) * tickSpacing,
                 (token0 === wethAddress ? wethDesired : tokenDesired),
                 (token0 === wethAddress ? tokenDesired : wethDesired),
                 0,
@@ -163,33 +165,65 @@ export const mint = () => {
                 from: nfpm.address,
                 to: address
             },
-            onLogs: logs => console.log(logs))
+            {
+                onLogs: logs => console.log(logs)
+            })
         }
     },[])
 }
 
 
-export const sellLP = () => {
+export const useApprovePosition = () => {
     const publicClient  = usePublicClient()
     const { data: walletClient, isError, isLoading } = useWalletClient()
     const { address, isConnecting, isDisconnected } = useAccount()
-
-    const fetchSellLP = useCallback(async (
+    const [approved, setApproved] = useState(false)
+    const fetchApproveNFT = useCallback(async (
         tokenId: string,
     ) => {
         if (publicClient && address && walletClient) {
-            const mimisbrunnr = getContract({
-                address: mimisAddress,
-                abi: mimisAbi,
+            const nfpm = getContract({
+                address: nfpmAddress,
+                abi: nfpmAbi,
                 publicClient,
                 walletClient
             })
 
-            const hash = await mimisbrunnr.write.sellLP([tokenId])
-            const unwatch = await mimisbrunnr.watchEvent.Transfer({
-                to: address
-            },
-            onLogs: logs => console.log(logs))
+            const hash = await nfpm.write.approve([MIMIS_ADDR, tokenId])
+            const unwatch = await nfpm.watchEvent.Approval({
+                owner: address,
+                approved: nfpmAddress,
+                tokenId: tokenId
+            }, {
+                onLogs: (logs) => {
+                    console.log(logs)
+                    fetchApprovalsForNFT(MIMIS_ADDR)
+                }
+            })
         }
-    }, [])
+    }, [publicClient, address, walletClient])
+
+    const fetchApprovalsForNFT = useCallback(async (tokenId: string) => {
+        if (publicClient && address && walletClient) {
+            const nfpm = getContract({
+                address: nfpmAddress,
+                abi: nfpmAbi,
+                publicClient,
+                walletClient
+            })
+            const approve = await nfpm.read.getApproved([tokenId])
+            console.log('approved', approve)
+
+            if (approve === MIMIS_ADDR) {
+                setApproved(true)
+            }
+        }
+    }, [publicClient, address, walletClient])
+
+    return {
+        fetchApprovalsForNFT,
+        fetchApproveNFT,
+        approved
+    }
+
 }

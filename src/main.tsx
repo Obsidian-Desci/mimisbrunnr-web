@@ -9,8 +9,11 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 
-import { WagmiConfig, createConfig, configureChains, mainnet } from 'wagmi'
+import { WagmiConfig, createConfig, configureChains  } from 'wagmi'
+import { mainnet, localhost} from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+
 
 
 import { NavBar } from './components/NavBar'
@@ -21,9 +24,12 @@ import { Mimis } from '@/pages/Mimis/Mimis.tsx'
 import { MintMimis } from '@/pages/Mimis/MintMimis.tsx'
 import { UnwrapMimis } from "./pages/Mimis/UnwrapMimis.tsx"
 import { StakeMimis } from "./pages/Mimis/StakeMimis.tsx"
+
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet],
-  [publicProvider()]
+  [mainnet, localhost],
+  [
+    publicProvider()
+  ]
 )
 
 const { connectors } = getDefaultWallets({
@@ -44,7 +50,6 @@ const theme = extendTheme(withDefaultColorScheme({
 }))
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
     <ChakraProvider theme={theme}>
       <WagmiConfig config={config}>
         <RainbowKitProvider coolMode chains={chains}>
@@ -61,5 +66,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </RainbowKitProvider>
       </WagmiConfig>
     </ChakraProvider>
-  </React.StrictMode>
 )

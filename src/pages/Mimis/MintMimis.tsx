@@ -1,36 +1,27 @@
-import { Token } from '@/hooks/useTokens'
-
-import { useForm, Resolver } from 'react-hook-form';
-type FormValues = {
-    firstName: string;
-    lastName: string;
-};
-const resolver: Resolver<FormValues> = async (values) => {
-    return {
-        values: values.firstName ? values : {},
-        errors: !values.firstName
-            ? {
-                firstName: {
-                    type: 'required',
-                    message: 'This is required.',
-                },
-            }
-            : {},
-    };
-};
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Container, Heading } from '@chakra-ui/react'
+import { BYOL } from '@/components/MintMimis/BYOL'
 export const MintMimis = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({ resolver });
-    const onSubmit = handleSubmit((data) => console.log(data));
 
     return (<>
-        <p>Mint Mimis</p>
-        <form onSubmit={onSubmit}>
-            <input {...register("firstName")} placeholder="Bill" />
-            {errors?.firstName && <p>{errors.firstName.message}</p>}
+        <Heading>Mint Mimis</Heading>
+        <Container>
+            <Box p={4}>
+                <Tabs isFitted variant='enclosed'>
+                    <TabList mb='1em'>
+                        <Tab>Bring Your Own Liquidity</Tab>
+                        <Tab>Zap In</Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel>
+                            <BYOL />
+                        </TabPanel>
+                        <TabPanel>
+                            <p>Zap In</p>
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
+            </Box>
 
-            <input {...register("lastName")} placeholder="Luo" />
-
-            <input type="submit" />
-        </form>
+        </Container>
     </>)
 }
