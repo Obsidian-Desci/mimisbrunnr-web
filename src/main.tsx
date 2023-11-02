@@ -17,7 +17,7 @@ import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 
 import { NavBar } from './components/NavBar'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Routes, Route, HashRouter } from 'react-router-dom'
 
 import { App } from '@/App.tsx'
 import { Mimis } from '@/pages/Mimis/Mimis.tsx'
@@ -53,7 +53,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ChakraProvider theme={theme}>
       <WagmiConfig config={config}>
         <RainbowKitProvider coolMode chains={chains}>
-          <BrowserRouter>
+          <HashRouter>
           <NavBar/>
           <Routes>
             <Route path="/" element={<App/>} />
@@ -62,7 +62,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="/mimis/unwrap" element={<UnwrapMimis/>} />
             <Route path="/mimis/stake" element={<StakeMimis/>} />
           </Routes>
-          </BrowserRouter>
+          </HashRouter>
         </RainbowKitProvider>
       </WagmiConfig>
     </ChakraProvider>
