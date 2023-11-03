@@ -11,7 +11,7 @@ import {
 import { WagmiConfig, createConfig, configureChains  } from 'wagmi'
 import { mainnet, localhost} from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 
 import { NavBar } from './components/NavBar'
@@ -26,6 +26,11 @@ import { StakeMimis } from "./pages/Mimis/StakeMimis.tsx"
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, localhost],
   [
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: import.meta.env.VITE_TENDERLY_RPC,
+      }),
+    }),
     publicProvider()
   ]
 )
