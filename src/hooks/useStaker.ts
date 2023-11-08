@@ -9,7 +9,7 @@ import {
 
 import {  address as stakerAddr, abi as stakerAbi} from "@/assets/abi/Staker.json"
 
-import { address as mimisAddress,  abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
+import { address as mimisAddress, abi as mimisAbi} from "@/assets/abi/MimisbrunnrV2.json"
 export const useStakeLP = () => {
 
     const publicClient  = usePublicClient()
@@ -52,7 +52,7 @@ export const useStakeLP = () => {
     }
 }
 
-export const unstake = () => {
+export const useUnstake = () => {
     const publicClient  = usePublicClient()
     const { data: walletClient, isError, isLoading } = useWalletClient()
     const { address, isConnecting, isDisconnected } = useAccount()
@@ -133,3 +133,36 @@ export const claimRewards = () => {
         result
     }
 }
+
+export const useGetRewards = () => {
+    const publicClient  = usePublicClient()
+    const { data: walletClient, isError, isLoading } = useWalletClient()
+    const { address, isConnecting, isDisconnected } = useAccount()
+    const [result, setResult] = useState(null)
+    const [hash, setHash] = useState(null)
+
+    const fetchGetRewards = useCallback(async (
+        tokenId: string,
+    ) => {
+        if (publicClient && address && walletClient) {
+            const staker = getContract({
+                address: stakerAddr as `0x${string}`,
+                abi: stakerAbi,
+                publicClient,
+                walletClient
+            })
+            const result = await staker.read.rewards([
+                address,
+                tokenId
+            ])
+            setResult(result)
+        }
+    }, [publicClient, address, walletClient])
+
+    return {
+        fetchGetRewards,
+        result
+    }
+}
+
+
