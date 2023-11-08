@@ -10,11 +10,11 @@ import {
 import { address as nfpmAddress, abi as nfpmAbi } from "@/assets/abi/NonFungiblePositionManager.json"
 import { address as swapAddress, abi as swapAbi } from '@/assets/abi/SwapRouter.json'
 import {abi as poolAbi} from "@/assets/abi/UniswapV3Pool.json"
-import {  abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
+import {  address as MIMIS_ADDR, abi as mimisAbi} from "@/assets/abi/MimisbrunnrV2.json"
 import { 
     Pool,
     WETH_ADDR,
-    MIMIS_ADDR,
+    //MIMIS_ADDR,
     PoolInfo,
     Position,
     structPoolInfo,
@@ -29,7 +29,7 @@ export const useGetPoolInfo = (token:Token) => {
     const fetchPoolInfo = useCallback(async () => {
         if (publicClient) {
             const mimisbrunnr = getContract({
-                address: MIMIS_ADDR,
+                address: MIMIS_ADDR as `0x${string}`,
                 abi: mimisAbi,
                 publicClient: publicClient
             })

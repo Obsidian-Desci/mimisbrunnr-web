@@ -30,7 +30,7 @@ export const useStakeLP = () => {
             })
 
             const hash = await nfpm.write.safeTransferFrom([
-                address, stakerAddr, tokenId, "0x00"
+                address, stakerAddr, tokenId
             ])
             setHash(hash)
             const unwatch = await nfpm.watchEvent.Transfer({
@@ -93,7 +93,7 @@ export const useUnstake = () => {
 }
 
 
-export const claimRewards = () => {
+export const useClaimRewards = () => {
     const publicClient  = usePublicClient()
     const { data: walletClient, isError, isLoading } = useWalletClient()
     const { address, isConnecting, isDisconnected } = useAccount()

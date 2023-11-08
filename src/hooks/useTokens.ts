@@ -15,10 +15,10 @@ import { address as growAddress, abi as growAbi } from "@/assets/abi/GROW.json"
 import { address as hairAddress, abi as hairAbi } from "@/assets/abi/HAIR.json"
 import { address as lakeAddress, abi as lakeAbi } from "@/assets/abi/LAKE.json"
 import { address as vitaAddress,  abi as vitaAbi } from "@/assets/abi/VITA.json"
-import { abi as mimisAbi} from "@/assets/abi/Mimisbrunnr.json"
+import { address as MIMIS_ADDR, abi as mimisAbi} from "@/assets/abi/MimisbrunnrV2.json"
 
 import { getContract } from 'viem'
-import {Token, MIMIS_ADDR, WETH_ADDR} from './constants'
+import {Token, /*MIMIS_ADDR,*/ WETH_ADDR} from './constants'
 
 export const useToken = (token:Token) => {
     const publicClient = usePublicClient()

@@ -26,12 +26,12 @@ import { StakeMimis } from "./pages/Mimis/StakeMimis.tsx"
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, localhost],
   [
+    publicProvider(),
     jsonRpcProvider({
       rpc: (chain) => ({
         http: import.meta.env.VITE_TENDERLY_RPC,
       }),
-    }),
-    publicProvider()
+    })
   ]
 )
 

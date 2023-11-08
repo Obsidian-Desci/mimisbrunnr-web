@@ -7,9 +7,9 @@ import {
     useWalletClient
 } from 'wagmi'
 
-import {  address as mimisAddr, abi as mimisAbi} from "@/assets/abi/MimisbrunnrV2.json"
+import {  address as MIMIS_ADDR, abi as mimisAbi} from "@/assets/abi/MimisbrunnrV2.json"
 import { 
-    MIMIS_ADDR,
+    //MIMIS_ADDR,
 } from './constants'
 
 
