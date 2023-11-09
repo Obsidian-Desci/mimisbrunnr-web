@@ -1,5 +1,5 @@
 import { Stake } from '@/components/StakeMimis/Stake'
-
+import { UnStake } from '@/components/StakeMimis/UnStake'
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Container, Heading } from '@chakra-ui/react'
 export const StakeMimis = () => {
     return (<>
@@ -16,7 +16,7 @@ export const StakeMimis = () => {
                             <Stake />
                         </TabPanel>
                         <TabPanel>
-                            <p>Remove Stake</p>
+                            <UnStake />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

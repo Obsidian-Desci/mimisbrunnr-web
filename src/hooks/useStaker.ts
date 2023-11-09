@@ -34,7 +34,6 @@ export const useStakeLP = () => {
             ])
             setHash(hash)
             const unwatch = await nfpm.watchEvent.Transfer({
-                from: nfpmAddr,
                 to: stakerAddr
             }, {
                 onLogs: (logs) => {
@@ -70,11 +69,11 @@ export const useUnstake = () => {
                 walletClient
             })
 
-            const hash = await nfpm.write.unstake([
+            const hash = await staker.write.unstakeToken([
                 tokenId
             ])
             setHash(hash)
-            const unwatch = await staker.watchEvent.TokenUnstaked({
+            const unwatch = staker.watchEvent.TokenUnstaked({
                 tokenId: tokenId,
             }, {
                 onLogs: (logs) => {
@@ -112,7 +111,7 @@ export const useClaimRewards = () => {
                 walletClient
             })
 
-            const hash = await nfpm.write.claimRewards([
+            const hash = await staker.write.claimRewards([
                 to
             ])
             setHash(hash)
