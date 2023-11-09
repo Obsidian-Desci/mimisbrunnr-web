@@ -65,11 +65,12 @@ export const useGetPoolInfo = (token:Token) => {
 
 
 
-export const swapExactInputSingle = async () => {
+export const useSwapExactInputSingle = async () => {
     const publicClient  = usePublicClient()
     const { data: walletClient, isError, isLoading } = useWalletClient()
     const { address, isConnecting, isDisconnected } = useAccount()
-
+    const [result, setResult] = useState(null)
+    const [hash, setHash] = useState(null)
     const fetchSwapExactInputSingle = useCallback(async (token: string, pool: Pool, amount: string) => {
         if (publicClient && address && walletClient) {
             const pool = getContract({
@@ -87,7 +88,7 @@ export const swapExactInputSingle = async () => {
                 walletClient
             })
 
-            const swapTx = await swapRouter.write.exactInputSingle([
+            const hash = await swapRouter.write.exactInputSingle([
                 WETH_ADDR,
                 token,
                 fee,
@@ -97,26 +98,36 @@ export const swapExactInputSingle = async () => {
                 0,
                 0
             ])
+            setHash(hash)
 
             const unwatch = await pool.watchEvent.Swap({
                 sender: address,
                 recepient: address
             },
             {
-                onLogs: logs => console.log(logs)
+                onLogs: logs => {
+                    setResult(logs)
+                    console.log(logs)}
             })
 
 
         }
-    }, [])
+    }, [publicClient, address, walletClient])
+
+    return {
+        fetchSwapExactInputSingle,
+        hash,
+        result
+    }
 }
 
 
-export const mint = () => {
+export const useMint = () => {
     const publicClient  = usePublicClient()
     const { data: walletClient, isError, isLoading } = useWalletClient()
     const { address, isConnecting, isDisconnected } = useAccount()
-
+    const [result, setResult] = useState(null)
+    const [hash, setHash] = useState(null)
     const fetchMint = useCallback(async (pool: Pool, wethDesired: string, tokenDesired: string) => {
         if (publicClient && address && walletClient) {
             const poolInstance = getContract({
@@ -147,16 +158,25 @@ export const mint = () => {
                 address,
                 Math.floor(new Date().getTime() / 1000) + 3600
             ])
+            setHash(hash)
 
             const unwatch = await nfpm.watchEvent.Transfer({
                 from: nfpm.address,
                 to: address
             },
             {
-                onLogs: logs => console.log(logs)
+                onLogs: logs => {
+                    setResult(logs) 
+                    console.log(logs)}
             })
         }
-    },[])
+    },[publicClient, address, walletClient])
+
+    return {
+        fetchMint,
+        hash,
+        result
+    }
 }
 
 
@@ -165,6 +185,10 @@ export const useApprovePosition = () => {
     const { data: walletClient, isError, isLoading } = useWalletClient()
     const { address, isConnecting, isDisconnected } = useAccount()
     const [approved, setApproved] = useState(false)
+
+    const [result, setResult] = useState(null)
+    const [hash, setHash] = useState(null)
+
     const fetchApproveNFT = useCallback(async (
         tokenId: string,
     ) => {

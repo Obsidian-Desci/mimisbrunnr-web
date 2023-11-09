@@ -49,6 +49,26 @@ export const useSellLP = () => {
     }
 }
 
+export const useZap = () => {
+    const publicClient  = usePublicClient()
+    const { data: walletClient, isError, isLoading } = useWalletClient()
+    const { address, isConnecting, isDisconnected } = useAccount()
+    const [result, setResult] = useState(null)
+    const [hash, setHash] = useState(null)
+
+    const fetchZap = useCallback(async (
+        token: string,
+        amountWeth: string
+    ) => {
+        if (publicClient && address && walletClient) {
+            const mimisbrunnr = getContract({
+                address: MIMIS_ADDR,
+                abi: mimisAbi,
+                publicClient,
+                walletClient
+            })
+}
+
 
 export const useUnwrapMimis = () => {
     const publicClient  = usePublicClient()

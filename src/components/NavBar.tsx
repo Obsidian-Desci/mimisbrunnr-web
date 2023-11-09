@@ -259,25 +259,19 @@ const NAV_ITEMS = [
    href: 'https://obsidian-desci.github.io/Docs/docs/category/mimisbrunnr' 
   },
   {
-    label: 'Mimis',
-    href: '/mimis',
-    children: [
-      {
-        label: 'Mint MIMS',
-        subLabel: 'Sell approved Uniswap v3 LP and receive MIMS',
-        href: '/mimis/mint',
-      },
-      {
-        label: 'Unwrap MIMS',
-        subLabel: 'Burn MIMS and receive a collection of desci tokens and WETH',
-        href: '/mimis/unwrap',
-      },
-      {
-        label: 'Stake MIMS/WETH',
-        subLabel: 'Stake in range MIMS/WETH LP and receive a portion of the LP rewards',
-        href: '/mimis/stake',
-      },
-
-    ],
+    label: 'Dashboard',
+    href: '/mimis'
   },
+  {
+    label: 'Mint',
+    href: '/mimis/mint'
+  },
+  {
+    label: 'Stake',
+    href: '/mimis/stake'
+  },
+  {
+    label: 'Unwrap',
+    href: '/mimis/unwrap'
+  }
 ];
